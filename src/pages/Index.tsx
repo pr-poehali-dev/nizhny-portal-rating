@@ -5,10 +5,12 @@ import { Card, CardContent, CardDescription, CardHeader, CardTitle } from '@/com
 import { Badge } from '@/components/ui/badge';
 import { Tabs, TabsContent, TabsList, TabsTrigger } from '@/components/ui/tabs';
 import Icon from '@/components/ui/icon';
+import CategoryPage from './CategoryPage';
 
 const Index = () => {
   const [searchQuery, setSearchQuery] = useState('');
   const [activeCategory, setActiveCategory] = useState('all');
+  const [selectedCategory, setSelectedCategory] = useState<{id: string, name: string, icon: string} | null>(null);
 
   const categories = [
     { id: 'attractions', name: 'Достопримечательности', icon: 'MapPin', count: 45 },
@@ -90,6 +92,25 @@ const Index = () => {
       />
     ));
   };
+
+  const handleCategoryClick = (category: {id: string, name: string, icon: string}) => {
+    setSelectedCategory(category);
+  };
+
+  const handleBackToMain = () => {
+    setSelectedCategory(null);
+  };
+
+  // Показываем страницу категории, если категория выбрана
+  if (selectedCategory) {
+    return (
+      <CategoryPage 
+        categoryId={selectedCategory.id}
+        categoryName={selectedCategory.name}
+        categoryIcon={selectedCategory.icon}
+      />
+    );
+  }
 
   return (
     <div className="min-h-screen bg-gray-50">
@@ -200,7 +221,7 @@ const Index = () => {
               
               <div className="grid grid-cols-1 md:grid-cols-2 lg:grid-cols-3 gap-6">
                 {categories.map((category) => (
-                  <Card key={category.id} className="hover:shadow-lg transition-shadow cursor-pointer group">
+                  <Card key={category.id} className="hover:shadow-lg transition-shadow cursor-pointer group" onClick={() => handleCategoryClick(category)}>
                     <CardHeader className="pb-3">
                       <div className="flex items-center justify-between">
                         <div className="flex items-center space-x-3">
